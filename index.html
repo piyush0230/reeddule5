@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riddle Puzzle</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 40px;
+    }
+    .puzzle-box {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 15px;
+      padding: 25px;
+      margin: auto;
+      width: 90%;
+      max-width: 520px;
+      box-shadow: 0px 6px 18px rgba(0,0,0,0.45);
+    }
+    input {
+      padding: 10px;
+      font-size: 16px;
+      width: 80%;
+      border: none;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      text-align: center;
+      outline: none;
+    }
+    input:disabled { opacity: 0.6; }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      background: #ff9800;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:disabled { opacity: 0.6; cursor: default; }
+    button:hover:not(:disabled) {
+      background: #e68900;
+    }
+    .message {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: 600;
+      min-height: 24px;
+    }
+    .correct {
+      color: #ffeb3b;
+    }
+    .wrong {
+      color: #ff8a80;
+    }
+    .clue {
+      margin-top: 15px;
+      background: rgba(255,255,255,0.06);
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-style: italic;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <h1>🤔 Riddle Puzzle</h1>
+  <p>Solve the puzzle to reveal your next clue!</p>
+  <div class="puzzle-box" role="region" aria-labelledby="riddleTitle">
+    <p id="riddleTitle">	I have pages but I’m not alive, I carry knowledge inside. Who am I? ?</p>
+    <input
+      type="text"
+      id="riddleAnswer"
+      placeholder="Enter your answer..."
+      aria-label="Riddle answer"
+    >
+    <br>
+    <button id="submitBtn" type="button">Submit</button>
+
+    <div id="riddleMsg" class="message" aria-live="polite"></div>
+    <div id="clue" class="clue" style="display:none"></div>
+  </div>
+
+  <script>
+    // Attach handlers
+    document.getElementById('submitBtn').addEventListener('click', checkRiddle);
+    document.getElementById('riddleAnswer').addEventListener('keydown', function(e){
+      if (e.key === 'Enter') checkRiddle();
+    });
+
+    function checkRiddle() {
+      const input = document.getElementById('riddleAnswer');
+      const ans = input.value.trim().toLowerCase();
+      const msg = document.getElementById('riddleMsg');
+      const clueBox = document.getElementById('clue');
+      const submitBtn = document.getElementById('submitBtn');
+
+      // accepted answers (all lowercase) — include common variants
+      const acceptedAnswers = [
+        'book','Book'
+      ];
+
+      if (!ans) {
+        msg.textContent = 'Please enter an answer.';
+        msg.className = 'message wrong';
+        return;
+      }
+
+      if (acceptedAnswers.includes(ans)) {
+        msg.textContent = '🎉 Correct!';
+        msg.className = 'message correct';
+
+        // show the clue
+        clueBox.innerHTML = 'Clue: <i>“Players dive, the ball takes flight, your clue hides out of sight”</i>';
+        clueBox.style.display = 'block';
+
+        // disable further attempts
+        input.disabled = true;
+        submitBtn.disabled = true;
+      } else {
+        msg.textContent = '❌ Wrong answer. Try again!';
+        msg.className = 'message wrong';
+      }
+    }
+  </script>
+</body>
+</html>
